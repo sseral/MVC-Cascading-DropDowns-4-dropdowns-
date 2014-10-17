@@ -161,6 +161,8 @@ Yani bu javascript ler HomeController daki bu fonksiyonlara göre dropdownları 
 
 
     <input type="submit" value="Submit" />
+    
+    
 }
 
 Ben bir yığın şeyleri bu örnekte dikkatiniz dağılmasın diye eklemedim. Ama programı çalıştırdığınızda aşağıdakini göreceksiniz.
