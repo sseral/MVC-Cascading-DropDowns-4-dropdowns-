@@ -1,10 +1,14 @@
 Şimdi sırasıyla aşağıdakileri yapın.
 MsSql ‘de henüz yoksa bir veritabanı oluşturun. (SQL Server Management Studio)
-Burada size bu makale ile vereceğim script.sql ile MsSql ‘de oluşturacağınız bir veritabanına yapacağımız uygulama için gereken il, ilçe, semt ve mahalle tablolarını ekleyin.
+Burada size bu makale ile vereceğim scriptler ile MsSql ‘de oluşturacağınız bir veritabanına yapacağımız uygulama için gereken il, ilçe, semt ve mahalle tablolarını ekleyin.
 Visual Studio ‘yu açıp MVC içeren bir Template seçin. Seçtiğiniz template javascript’leri içersin. Normalde otomatik olarak HomeController oluşacaktır. Ben kısa yoldan HomeController kullanarak örneklemeyi yapacağım. Siz buradan yola çıkarak örneği kendi uygulamanıza adapte edebilirsiniz. 
-Add >> ADO NET Entity Model >> EF Designer From Database ile veritabanının tablolarını projeniz ile ilişkilendirin. Bilmeyenler için söylüyorum, bu adım ile veritabanınızdaki tüm tabloların Modellerini otomatik olarak oluşturmuş olacaksınız. Ben bu uygulamada Model kullanmıyorum ama il, ilçe, semt ve mahalle verilerini veritabanından kullanabilmek için bu adım gerekli. 
+Add >> ADO NET Entity Model >> EF Designer From Database ile veritabanının tablolarını projeniz ile ilişkilendirin. Bilmeyenler için söylüyorum, bu adım ile veritabanınızdaki tüm tabloların Modellerini otomatik olarak oluşturmuş olacaksınız. Ben bu uygulamada Model kullanmıyorum ama il, ilçe, semt ve mahalle verilerini veritabanından kullanabilmek için bu adım gerekli.
+
+Bu arada Mahalleler tablosu uzun olduğu için ben oluşturma scriptlerini mahalleler(1), mahalleler(2), mahalleler(3) .. gibi böldüm. Siz sırayı takip ederek oluşturun bunu. mahalleler(1) de tablonun oluşturulması ve INSERT 'ler var. Diğerlerinde sadece INSERT ler var.
+
 HomeController.cs ‘yi açın. (Ben c# kullanıyorum bu örnekte.) içeriğini aşağıdaki gibi yapın .
-  PaketYemekEntities _db = new PaketYemekEntities(); //Benim veritabanı : PaketYemek
+
+  PaketYemekEntities _db = new PaketYemekEntities(); //Benim veritabanı : PaketYemek. Sizde bu farklı olacaktır oluşturacağınız veritabanı adına göre. Bunun ne olduğunu web.config 'den öğrenebilirsiniz Add >> ADO NET Entity Model >> EF Designer From Database ile veritabanının tablolarını projeniz ile ilişkilendirdikten sonra. (Bu ilişkilendirmede web.config 'e bu yeni bağlantının kaydedilmesi olacaktır.)
 
         public ActionResult Index()
         {
