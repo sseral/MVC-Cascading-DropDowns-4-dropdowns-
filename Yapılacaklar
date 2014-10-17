@@ -1,0 +1,171 @@
+Şimdi sırasıyla aşağıdakileri yapın.
+MsSql ‘de henüz yoksa bir veritabanı oluşturun. (SQL Server Management Studio)
+Burada size bu makale ile vereceğim script.sql ile MsSql ‘de oluşturacağınız bir veritabanına yapacağımız uygulama için gereken il, ilçe, semt ve mahalle tablolarını ekleyin.
+Visual Studio ‘yu açıp MVC içeren bir Template seçin. Seçtiğiniz template javascript’leri içersin. Normalde otomatik olarak HomeController oluşacaktır. Ben kısa yoldan HomeController kullanarak örneklemeyi yapacağım. Siz buradan yola çıkarak örneği kendi uygulamanıza adapte edebilirsiniz. 
+Add >> ADO NET Entity Model >> EF Designer From Database ile veritabanının tablolarını projeniz ile ilişkilendirin. Bilmeyenler için söylüyorum, bu adım ile veritabanınızdaki tüm tabloların Modellerini otomatik olarak oluşturmuş olacaksınız. Ben bu uygulamada Model kullanmıyorum ama il, ilçe, semt ve mahalle verilerini veritabanından kullanabilmek için bu adım gerekli. 
+HomeController.cs ‘yi açın. (Ben c# kullanıyorum bu örnekte.) içeriğini aşağıdaki gibi yapın .
+  PaketYemekEntities _db = new PaketYemekEntities(); //Benim veritabanı : PaketYemek
+
+        public ActionResult Index()
+        {
+            var query =
+              (from illers in _db.tbl_il
+               orderby illers.il_ad
+
+               select new
+               {
+                   il_id = illers.il_id,
+                   il_ad = illers.il_ad
+               }).ToList();
+
+
+            List<SelectListItem> items = new List<SelectListItem>();
+
+            foreach (var item in query)
+            {
+                items.Add(new SelectListItem { Text = @item.il_ad, Value = @item.il_id.ToString() });
+            }
+
+
+            ViewBag.IIller = new SelectList(items, "Value", "Text");
+
+            return View();
+        }
+
+        public JsonResult IlceList(string Id)
+        {
+            int il_id = Convert.ToInt32(Id);
+            var district = (from s in _db.tbl_ilce
+                            orderby s.ilce_ad
+                            where s.il_id == il_id
+                            select s);
+
+            return Json(new SelectList(district.ToArray(), "ilce_id", "ilce_ad"), JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult SemtList(string Id)
+        {
+            int ilce_id = Convert.ToInt32(Id);
+            var district = (from s in _db.tbl_semt
+                            orderby s.semt_ad
+                            where s.ilce_id == ilce_id
+                            select s);
+
+            return Json(new SelectList(district.ToArray(), "semt_id", "semt_ad"), JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult MahalleList(string Id)
+        {
+            int semt_id = Convert.ToInt32(Id);
+            var district = (from s in _db.tbl_mahalle
+                            orderby s.mahalle_ad
+                            where s.semt_id == semt_id
+                            select s);
+
+            return Json(new SelectList(district.ToArray(), "mahalle_id", "mahalle_ad"), JsonRequestBehavior.AllowGet);
+        }
+Şimdi Views >> Home >> Index.cshtml ‘i açın. Ve içeriğini aşağıdaki gibi değiştirin. Aşağıdaki kod için kısa bir açıklama yapayım. @section scripts  içerisinde $(function () {… kısımlarında İl dropdown değişince İlçe, Semt ve Mahalle dropdownları sıfırlanıyor ve içeriklerine sadece bu dropdownları doldurmanız için uyarılar geliyor. (İlçe Seçin, Semt Seçin, Mahalle Seçin). Bunu yapabilmek için HomeController ‘da yukarıda belirttiğim fonksiyonlar var.
+
+  public JsonResult IlceList(string Id){…}
+  public JsonResult SemtList(string Id){…}
+  public JsonResult MahalleList(string Id){…}
+
+Yani bu javascript ler HomeController daki bu fonksiyonlara göre dropdownları dolduruyor. Ama bunu sayfa yenilenmeden yapıyor. Şayet sayfa yenilense tüm seçimleriniz sıfırlanacak ve başa dönecektiniz. İşte Client Script dediğimiz şey burada işe yarıyor. Seçtikleriniz kalıyor ve bir üstte yaptığınız seçime göre aşağıdaki dropdownlar dolduruluyor. Sanırım burada anlaşılmayan bir şey yok.
+
+
+
+Şimdi aşağıdaki Index.cshtml ‘e bakalım. Dikkat ederseniz bu sayfa için herhangi bir Model yok. Tabi siz bu sayfadan başka field ler de alacaksanız o zaman bir Model tanımlar ve yola devam edersiniz. Ama bu DropDownlar için gerek yok. Ayrıca il için DropDown kullanırken İlçe, Semt ve Mahalle sadece <select id="IIlce" name="IIlce"></select> gibi id’si olan select ‘ler yeterli. Çünkü Json ‘a ilgili element in id’sini vermek yeterli oluyor.
+
+
+@{
+    ViewBag.Title = "Adres"; <<< Buraya üstte görmek isteyeceğiniz bir şey yazın.
+    Layout = "~/Views/Shared/_Layout.cshtml";}
+
+
+@section scripts
+{
+    <script type="text/javascript">
+
+        $(function () {
+            $('#IIl').change(function () {
+                $.getJSON('/Home/IlceList/' + $('#IIl').val(), function (data) {
+                    var items = '<option>---İlçe seçin---</option>';
+                    $.each(data, function (i, ilçe) {
+                        items += "<option value='" + ilçe.Value + "'>" + ilçe.Text + "</option>";
+                    });
+                    $('#IIlce').html(items);
+
+                    var items_semt = '<option>---Semt seçin---</option>';
+                    $('#SSemt').html(items_semt);
+
+                    var items_mahalle = '<option>---Mahalle seçin---</option>';
+                    $('#MMahalle').html(items_mahalle);
+                });
+            });
+        });
+
+
+        $(function () {
+            $('#IIlce').change(function () {
+                $.getJSON('/ Home /SemtList/' + $('#IIlce').val(), function (data) {
+                    var items = '<option>---Semt seçin---</option>';
+                    $.each(data, function (i, semt) {
+                        items += "<option value='" + semt.Value + "'>" + semt.Text + "</option>";
+                    });
+                    $('#SSemt').html(items);
+
+                    var items_mahalle = '<option>---Mahalle seçin---</option>';
+                    $('#MMahalle').html(items_mahalle);
+
+                });
+            });
+        });
+
+
+        $(function () {
+            $('#SSemt').change(function () {
+                $.getJSON('/ Home /MahalleList/' + $('#SSemt').val(), function (data) {
+                    var items = '<option>---Mahalle seçin---</option>';
+                    $.each(data, function (i, mahalle) {
+                        items += "<option value='" + mahalle.Value + "'>" + mahalle.Text + "</option>";
+                    });
+                    $('#MMahalle').html(items);
+                });
+            });
+        });
+
+
+    </script>
+}
+
+<br /><br /><br />
+ 
+@using (Html.BeginForm())
+{
+    @Html.DropDownList("IIl", ViewBag.IIller as SelectList, "--- İl seçin ---", new { id = "IIl" })
+
+    <br /><br />
+
+    <select id="IIlce" name="IIlce"></select>
+
+    <br /><br />
+
+
+    <select id="SSemt" name="SSemt"></select>
+
+    <br /><br />
+
+    <select id="MMahalle" name="MMahalle"></select>
+
+    <br /><br />
+
+
+    <input type="submit" value="Submit" />
+}
+
+Ben bir yığın şeyleri bu örnekte dikkatiniz dağılmasın diye eklemedim. Ama programı çalıştırdığınızda aşağıdakini göreceksiniz.
+ 
+Seçim yaptıkça aşağıdaki DropDown kutuları seçilene göre değişecek. Şimdi siz bunu istediğiniz gibi adapte edebilirsiniz. Ben özellikle css gibi ayrıntıları koymadım dikkatiniz dağılmasın diye.
+İyi programlamalar.
+Serhat Albayoğlu
+
