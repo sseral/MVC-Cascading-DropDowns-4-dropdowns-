@@ -8,7 +8,7 @@ Bu arada Mahalleler tablosu uzun olduğu için ben oluşturma scriptlerini mahal
 
 HomeController.cs ‘yi açın. (Ben c# kullanıyorum bu örnekte.) içeriğini aşağıdaki gibi yapın .
 
-  PaketYemekEntities _db = new PaketYemekEntities(); //Benim veritabanı : PaketYemek. Sizde bu farklı olacaktır oluşturacağınız veritabanı adına göre. Bunun ne olduğunu web.config 'den öğrenebilirsiniz Add >> ADO NET Entity Model >> EF Designer From Database ile veritabanının tablolarını projeniz ile ilişkilendirdikten sonra. (Bu ilişkilendirmede web.config 'e bu yeni bağlantının kaydedilmesi olacaktır.)
+  PaketYemekEntities _db = new PaketYemekEntities(); //Benim veritabanı : PaketYemek. Sizde bu farklı olacaktır oluşturacağınız veritabanı adına göre. Bunun ne olduğunu web.config 'den öğrenebilirsiniz Add >> ADO NET Entity Model >> EF Designer From Database ile veritabanının tablolarını projeniz ile ilişkilendirdikten sonra. (Bu ilişkilendirmede web.config 'e bu yeni bağlantınız <connectionstring> içerisine kaydediecektir.)
 
         public ActionResult Index()
         {
@@ -68,22 +68,22 @@ HomeController.cs ‘yi açın. (Ben c# kullanıyorum bu örnekte.) içeriğini 
 
             return Json(new SelectList(district.ToArray(), "mahalle_id", "mahalle_ad"), JsonRequestBehavior.AllowGet);
         }
-Şimdi Views >> Home >> Index.cshtml ‘i açın. Ve içeriğini aşağıdaki gibi değiştirin. Aşağıdaki kod için kısa bir açıklama yapayım. @section scripts  içerisinde $(function () {… kısımlarında İl dropdown değişince İlçe, Semt ve Mahalle dropdownları sıfırlanıyor ve içeriklerine sadece bu dropdownları doldurmanız için uyarılar geliyor. (İlçe Seçin, Semt Seçin, Mahalle Seçin). Bunu yapabilmek için HomeController ‘da yukarıda belirttiğim fonksiyonlar var.
+Şimdi Views >> Home >> Index.cshtml ‘i açın. Ve içeriğini aşağıdaki gibi değiştirin. Aşağıdaki kod için kısa bir açıklama yapayım. @section scripts  içerisinde $(function () {… kısımlarında İl dropdown değişince İlçe, Semt ve Mahalle dropdownları sıfırlanıyor ve içeriklerine sadece bu dropdownları doldurmanız için uyarılar geliyor. (İlçe Seçin, Semt Seçin, Mahalle Seçin). Bunu yapabilmek için HomeController ‘da yukarıda da belirttiğim gibi aşağıdaki fonksiyonlar var.
 
   public JsonResult IlceList(string Id){…}
   public JsonResult SemtList(string Id){…}
   public JsonResult MahalleList(string Id){…}
 
-Yani bu javascript ler HomeController daki bu fonksiyonlara göre dropdownları dolduruyor. Ama bunu sayfa yenilenmeden yapıyor. Şayet sayfa yenilense tüm seçimleriniz sıfırlanacak ve başa dönecektiniz. İşte Client Script dediğimiz şey burada işe yarıyor. Seçtikleriniz kalıyor ve bir üstte yaptığınız seçime göre aşağıdaki dropdownlar dolduruluyor. Sanırım burada anlaşılmayan bir şey yok.
-
-
+Yani bu javascript ler HomeController daki bu fonksiyonlara göre dropdownları dolduruyor. Ama bunu sayfa yenilenmeden yapıyor. Şayet sayfa yenilense tüm seçimleriniz sıfırlanacak ve başa dönecektiniz. İşte Client Script dediğimiz şey burada işe yarıyor. Sayfadan ayrılmadan Controller 'da tanımladığınız bir fonksiyondan gerekli işlemleri yapabiliyorsunuz ve sayfada yaptığınız bir değişikliğe göre Controller fonksiyonları devreye giriyor. Bunu ASP .NET 'teki AutoPostBak gibi düşünün. Ama tabi bu bir postback yapmıyor. Zaten MVC 'de PostBack diye bir kavram da yok. Sayfada seçtikleriniz kalıyor ve bir üstte yaptığınız seçime göre aşağıdaki dropdownlar dolduruluyor. Sanırım burada anlaşılmayan bir şey yok.
 
 Şimdi aşağıdaki Index.cshtml ‘e bakalım. Dikkat ederseniz bu sayfa için herhangi bir Model yok. Tabi siz bu sayfadan başka field ler de alacaksanız o zaman bir Model tanımlar ve yola devam edersiniz. Ama bu DropDownlar için gerek yok. Ayrıca il için DropDown kullanırken İlçe, Semt ve Mahalle sadece <select id="IIlce" name="IIlce"></select> gibi id’si olan select ‘ler yeterli. Çünkü Json ‘a ilgili element in id’sini vermek yeterli oluyor.
 
+Index.cshtml
 
 @{
     ViewBag.Title = "Adres"; <<< Buraya üstte görmek isteyeceğiniz bir şey yazın.
-    Layout = "~/Views/Shared/_Layout.cshtml";}
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
 
 @section scripts
