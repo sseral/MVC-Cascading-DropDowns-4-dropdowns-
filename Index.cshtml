@@ -1,0 +1,86 @@
+@{
+    ViewBag.Title = "Adres"; <<< Buraya üstte görmek isteyeceğiniz bir şey yazın.
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@section scripts
+{
+    <script type="text/javascript">
+
+        $(function () {
+            $('#IIl').change(function () {
+                $.getJSON('/Home/IlceList/' + $('#IIl').val(), function (data) {
+                    var items = '<option>---İlçe seçin---</option>';
+                    $.each(data, function (i, ilçe) {
+                        items += "<option value='" + ilçe.Value + "'>" + ilçe.Text + "</option>";
+                    });
+                    $('#IIlce').html(items);
+
+                    var items_semt = '<option>---Semt seçin---</option>';
+                    $('#SSemt').html(items_semt);
+
+                    var items_mahalle = '<option>---Mahalle seçin---</option>';
+                    $('#MMahalle').html(items_mahalle);
+                });
+            });
+        });
+
+
+        $(function () {
+            $('#IIlce').change(function () {
+                $.getJSON('/ Home /SemtList/' + $('#IIlce').val(), function (data) {
+                    var items = '<option>---Semt seçin---</option>';
+                    $.each(data, function (i, semt) {
+                        items += "<option value='" + semt.Value + "'>" + semt.Text + "</option>";
+                    });
+                    $('#SSemt').html(items);
+
+                    var items_mahalle = '<option>---Mahalle seçin---</option>';
+                    $('#MMahalle').html(items_mahalle);
+
+                });
+            });
+        });
+
+
+        $(function () {
+            $('#SSemt').change(function () {
+                $.getJSON('/ Home /MahalleList/' + $('#SSemt').val(), function (data) {
+                    var items = '<option>---Mahalle seçin---</option>';
+                    $.each(data, function (i, mahalle) {
+                        items += "<option value='" + mahalle.Value + "'>" + mahalle.Text + "</option>";
+                    });
+                    $('#MMahalle').html(items);
+                });
+            });
+        });
+
+
+    </script>
+}
+
+<br /><br /><br />
+ 
+@using (Html.BeginForm())
+{
+    @Html.DropDownList("IIl", ViewBag.IIller as SelectList, "--- İl seçin ---", new { id = "IIl" })
+
+    <br /><br />
+
+    <select id="IIlce" name="IIlce"></select>
+
+    <br /><br />
+
+
+    <select id="SSemt" name="SSemt"></select>
+
+    <br /><br />
+
+    <select id="MMahalle" name="MMahalle"></select>
+
+    <br /><br />
+
+
+    <input type="submit" value="Submit" />
+}
