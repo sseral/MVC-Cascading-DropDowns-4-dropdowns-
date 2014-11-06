@@ -17,10 +17,8 @@ isteyebilirsiniz. O zaman kullanacağınız her view Model 'ine bu dropdownları
 Her ne kadar ben İL, İLÇE, SEMT ve MAHALLE dropdownlarını örnekliyor da olsam bu mantığı başka bir senaryoya 
 kolayca uygulayabilirsiniz. Sadece buradaki mantığı iyi anlayın.
 
-Burada püf noktası şu. Her şey Index.cshtml 'de bitiyor. Sadece Index.cshtml 'deki scripler sayesinde herhangi bir 
-dropdown değiştiğinde diğer dropdownların bu değişen dropdowndaki değişikliğe göre durum alması sağlanıyor. 
-Bunun için ise Controller 'da tanımlanan fonksiyonlar devreye giriyor. Yani dikkatinizi sadece 2 şeye verin.
-Controller.cs ve Index.cshtml.
+Burada püf noktası şu. Her şey Index.cshtml  ve HomeController.cs 'te bitiyor. Sadece Index.cshtml 'deki scripler sayesinde herhangi bir dropdown değiştiğinde diğer dropdownların bu değişen dropdowndaki değişikliğe göre durum alması sağlanıyor. Bu da HomeController.cs 'te tanımlanmış olan JSon fonksiyonları ile ve sayfa yenilenmeden gerçekleşiyor.
+Yani dikkatinizi sadece 2 şeye verin. HomeController.cs ve Index.cshtml. Diğerleri ise veritabanında il, ilçe, semt ve mahalleleri oluşturabilmeniz için sql scriptleri. Çünkü Json fonksiyonları bu tablolardan veriyi çekiyor.
 
 Şimdi bu iki öğeyi inceleyin.
 
