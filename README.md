@@ -1,7 +1,6 @@
 MVC-Cascading-DropDowns (4-dropdowns) - MVC Bağımlı DropDownlar (4 DropDown - birbirine bağımlı) - (İL, İLÇE, SEMT, MAHALLE seçimi için)
 
-MVC geliştiricileri ASP.NET ‘te alıştığımız bol dökümantasyon ve örnek programlar bulmada hala sıkıntılı. Bu arada iyi 
-niyetli olmalarına rağmen eksik veya gerçek hayat örneği olmayan  örnekleme yapan arkadaşlar işi kolaylaştırmıyor. 
+MVC geliştiricileri ASP.NET ‘te alıştığımız bol dökümantasyon ve örnek programlar bulmada hala sıkıntılı. Gerçek hayat örneği olmayan  örnekleme yapan arkadaşlar işi kolaylaştırmıyor. 
 
 İnternette bulduğum hiçbir örnek doğru çalışmadı veya amacıma uymadı. Burada verdiklerim bu konudaki aramalarınıza 
 kesin cevap olup, tüm testleri yapıldı. Yani ben sizin ile çalışan bir programımdan direk aldığım kodlarımı paylaşıyorum. 
