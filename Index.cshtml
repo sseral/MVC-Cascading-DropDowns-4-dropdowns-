@@ -10,7 +10,7 @@
 
         $(function () {
             $('#IIl').change(function () {
-                $.getJSON('/Home/IlceList/' + $('#IIl').val(), function (data) {
+                $.getJSON('@Url.Content("~/Home/IlceList/")' + $('#IIl').val(), function (data) {
                     var items = '<option>---İlçe seçin---</option>';
                     $.each(data, function (i, ilçe) {
                         items += "<option value='" + ilçe.Value + "'>" + ilçe.Text + "</option>";
@@ -29,7 +29,7 @@
 
         $(function () {
             $('#IIlce').change(function () {
-                $.getJSON('/ Home /SemtList/' + $('#IIlce').val(), function (data) {
+                $.getJSON('@Url.Content("~/Home/SemtList/")' + $('#IIlce').val(), function (data) {
                     var items = '<option>---Semt seçin---</option>';
                     $.each(data, function (i, semt) {
                         items += "<option value='" + semt.Value + "'>" + semt.Text + "</option>";
@@ -46,7 +46,7 @@
 
         $(function () {
             $('#SSemt').change(function () {
-                $.getJSON('/ Home /MahalleList/' + $('#SSemt').val(), function (data) {
+                $.getJSON('@Url.Content("~/Home/MahalleList/")' + $('#SSemt').val(), function (data) {
                     var items = '<option>---Mahalle seçin---</option>';
                     $.each(data, function (i, mahalle) {
                         items += "<option value='" + mahalle.Value + "'>" + mahalle.Text + "</option>";
